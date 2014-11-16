@@ -1,0 +1,13 @@
+{
+  "name": "mean_stack",
+  "version": "0.0.0",
+  "description": "\"Ali testing bower\"",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
