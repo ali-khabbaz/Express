@@ -40,6 +40,7 @@ if (cluster.isMaster) {
 
 
 	var registerFunction = require('./server/apps/register.js').register;
+	var login = require('./server/apps/login.js').login;
 	var global = require('./server/apps/global.js').global;
 	var pdfServe = require('./server/apps/pdfServe.js').pdfServe;
 
@@ -47,6 +48,7 @@ if (cluster.isMaster) {
 
 	app.get(/.pdf/, pdfServe);
 	app.post('/app/register', registerFunction);
+	app.post('/app/login', login);
 	app.get('/', global);
 
 

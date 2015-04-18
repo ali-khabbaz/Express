@@ -10,6 +10,8 @@
 		cluster = require('cluster'),
 		numCPUs = require('os').cpus().length,
 		util = require('util'),
+		bcrypt = require('bcrypt-nodejs'),
+		crypto = require('crypto'),
 		Client = require('mariasql'),
 		c = new Client();
 
@@ -25,5 +27,7 @@
 	exports.numCPUs = numCPUs;
 	exports.util = util;
 	exports.c = c;
+	exports.bcrypt = bcrypt;
+	exports.crypto = crypto;
 
 }());

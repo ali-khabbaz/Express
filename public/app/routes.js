@@ -17,6 +17,12 @@ define([], function () {
 					'/app/register/registerCtrl.js',
 					'/app/register/registerDirective.js'
 				]
+			},
+			'/login': {
+				templateUrl: '/app/login/login.html',
+				dependencies: [
+					'/app/login/loginCtrl.js'
+				]
 			}
 		}
 	};
