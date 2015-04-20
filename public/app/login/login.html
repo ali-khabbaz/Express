@@ -1,0 +1,10 @@
+<div ng-controller="loginCtrl as login">
+    <p>Login</p>
+    <p><a href="/#/main">back to main</a></p>
+    <form>
+    	<h1>Log In</h1>
+    	<input same-as name="email" ng-model="email" type="text" placeholder="Email address" required autofocus><br>
+    	<input type="password" placeholder="password" ng-model="password" required><br>
+    	<button type="submit" class="submit_btn" ng-click="login.login(email,password)" >login</button>
+    </form>
+</div>
