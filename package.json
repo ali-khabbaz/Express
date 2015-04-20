@@ -15,7 +15,10 @@
     "crypto": "0.0.3",
     "ejs": "^1.0.0",
     "express": "^4.10.2",
+    "jwt-simple": "^0.3.0",
     "morgan": "^1.5.0",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
     "path": "^0.4.9",
     "prerender-node": "^1.1.1"
   }

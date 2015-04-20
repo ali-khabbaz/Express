@@ -8,7 +8,8 @@ define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolver
 			'$compileProvider',
 			'$filterProvider',
 			'$provide',
-			function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
+			'$httpProvider',
+			function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide,$httpProvider) {
 				app.controller = $controllerProvider.register;
 				app.directive = $compileProvider.directive;
 				app.filter = $filterProvider.register;
@@ -28,6 +29,8 @@ define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolver
 						redirectTo: routes.defaultRoutePath
 					});
 				}
+				//$httpProvider.interceptors.push('mainViewFactory');
+				//$httpProvider.responseInterceptors.push('httpInterceptor');
 			}
 		]
 	);

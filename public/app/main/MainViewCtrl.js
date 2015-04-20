@@ -9,7 +9,6 @@
 			/* js hint valid this: true*/
 			var vm = this;
 			vm.list = 'mainviewcontroller loaded';
-			vm.as = mainViewFactory.as();
 		}
 	});
 }());

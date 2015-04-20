@@ -8,6 +8,7 @@ var express = require('./server/requires.js').express,
 	cookieParser = require('./server/requires.js').cookieParser,
 	numCPUs = require('./server/requires.js').numCPUs;
 
+
 var PORT = 80;
 c.connect({
 	host: '127.0.0.1',
@@ -37,6 +38,8 @@ if (cluster.isMaster) {
 	app.use(
 		express.static(path.join(__dirname, '/public'))
 	);
+	//app.use(passport.initialize());
+
 
 
 	var registerFunction = require('./server/apps/register.js').register;
@@ -49,6 +52,17 @@ if (cluster.isMaster) {
 	app.get(/.pdf/, pdfServe);
 	app.post('/app/register', registerFunction);
 	app.post('/app/login', login);
+	app.post('/app/jobs', function (req, res) {
+		console.log('header', req.headers.authorization);
+		if (!req.headers.authorization) {
+			return res.status(301).send({
+				message: 'you are not authorized'
+			});
+		}
+		res.json({
+			salam: "bahbah"
+		});
+	});
 	app.get('/', global);
 
 

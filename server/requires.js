@@ -13,6 +13,9 @@
 		bcrypt = require('bcrypt-nodejs'),
 		crypto = require('crypto'),
 		Client = require('mariasql'),
+		jwt = require('jwt-simple'),
+		passport = require('passport'),
+		local_strategy = require('passport-local').Strategy,
 		c = new Client();
 
 
@@ -29,5 +32,8 @@
 	exports.c = c;
 	exports.bcrypt = bcrypt;
 	exports.crypto = crypto;
+	exports.jwt = jwt;
+	exports.passport = passport;
+	exports.local_strategy = local_strategy;
 
 }());

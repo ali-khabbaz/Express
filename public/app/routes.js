@@ -1,4 +1,4 @@
-define([], function () {
+define(['app'], function (app) {
 	return {
 		defaultRoutePath: '/main',
 		routes: {
@@ -22,6 +22,12 @@ define([], function () {
 				templateUrl: '/app/login/login.html',
 				dependencies: [
 					'/app/login/loginCtrl.js'
+				]
+			},
+			'/jobs': {
+				templateUrl: '/app/jobs/jobs.html',
+				dependencies: [
+					'/app/jobs/jobsCtrl.js'
 				]
 			}
 		}
