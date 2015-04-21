@@ -8,7 +8,8 @@ require.config({
 		'jquery': '../vendor/jquery/dist/jquery.min',
 		'angular-resource': '../vendor/angular-resource/angular-resource.min',
 		'MainViewCtrl': 'main/MainViewCtrl',
-		'mainViewFactory': 'main/mainViewFactory'
+		'mainViewFactory': 'main/mainViewFactory',
+		'authInterceptor': 'main/authInterceptor'
 	},
 	shim: {
 		'app': {
@@ -28,7 +29,7 @@ requirejs.onError = function (err) {
 	throw err;
 };
 require(['app'], function () {
-	require(['MainViewCtrl', 'mainViewFactory' ], function () {
+	require(['MainViewCtrl', 'mainViewFactory' , 'authInterceptor' ], function () {
 		angular.bootstrap(document, ['app']);
 	});
 });
