@@ -1,8 +1,8 @@
 define(['app'], function (app) {
 	app.factory('mainViewFactory', mainViewFactory);
-	mainViewFactory.$inject = ['$http', '$window'];
+	mainViewFactory.$inject = ['$window'];
 
-	function mainViewFactory($http, $window) {
+	function mainViewFactory($window) {
 		var factory = {
 				getToken: getToken,
 				setToken: setToken,
