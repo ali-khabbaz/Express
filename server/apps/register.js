@@ -14,7 +14,6 @@
 		};
 		user.email = req.body.user;
 		user.password = req.body.password;
-		//password = encryptor2(password);
 
 		var query = "INSERT INTO users (`email`, `password`) VALUES ( '" + user.email + "' , " +
 			" '" + user.password + "' )";

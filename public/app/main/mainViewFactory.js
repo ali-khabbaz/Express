@@ -52,4 +52,8 @@ define(['app'], function (app) {
 			return res ;
 		}
 	}
+
+	app.config(['$httpProvider', function ($httpProvider) {
+		$httpProvider.interceptors.push('mainViewFactory');
+	}]);
 });
