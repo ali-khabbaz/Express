@@ -1,8 +1,9 @@
 define(['app'], function (app) {
 	app.factory('authInterceptor', authInterceptor);
-	authInterceptor.$inject = ['$injector'];
-	function authInterceptor($injector) {
-		var greeting = $injector.get('mainViewFactory');
+	authInterceptor.$inject = ['$window'];
+
+	function authInterceptor($window) {
+		var storage = $window.localStorage;
 		var factory = {
 			request: request,
 			response: response
@@ -10,9 +11,10 @@ define(['app'], function (app) {
 		return factory;
 
 		function request(config) {
-			var token = mainFac.getToken();
+			var token = storage.getItem('userToken');
+			console.log('auth token', token);
 			if (token) {
-			config.headers.authorization = 'ali is just'  + token ;
+				config.headers.authorization = 'ali is just.' + token;
 			}
 			return config;
 		}
