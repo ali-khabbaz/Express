@@ -6,6 +6,8 @@ var express = require('./server/requires.js').express,
 	path = require('./server/requires.js').path,
 	bodyParser = require('./server/requires.js').bodyParser,
 	cookieParser = require('./server/requires.js').cookieParser,
+	decode = require('./server/utilities.js').decode,
+	//verify = require('./server/utilities.js').verify,
 	numCPUs = require('./server/requires.js').numCPUs;
 
 
@@ -38,7 +40,6 @@ if (cluster.isMaster) {
 	app.use(
 		express.static(path.join(__dirname, '/public'))
 	);
-	//app.use(passport.initialize());
 
 
 
@@ -46,23 +47,14 @@ if (cluster.isMaster) {
 	var login = require('./server/apps/login.js').login;
 	var global = require('./server/apps/global.js').global;
 	var pdfServe = require('./server/apps/pdfServe.js').pdfServe;
+	var jobs = require('./server/apps/jobs.js').jobs;
 
 
 
 	app.get(/.pdf/, pdfServe);
 	app.post('/app/register', registerFunction);
 	app.post('/app/login', login);
-	app.post('/app/jobs', function (req, res) {
-		console.log('header', req.headers.authorization);
-		if (!req.headers.authorization) {
-			return res.status(301).send({
-				message: 'you are not authorized'
-			});
-		}
-		res.json({
-			salam: "bahbah"
-		});
-	});
+	app.post('/app/jobs', jobs);
 	app.get('/', global);
 
 

@@ -14,10 +14,8 @@
 		};
 		user.email = req.body.user;
 		user.password = req.body.password;
-
 		var query = "INSERT INTO users (`email`, `password`) VALUES ( '" + user.email + "' , " +
 			" '" + user.password + "' )";
-
 		showDb(query).then(function (ress) {
 			console.log('query is', query);
 			/*for example i add user info to db and retrieve user id*/
@@ -26,13 +24,11 @@
 				iss: req.hostname,
 				sub: user.id
 			};
-
 			var token = encode(payload, "shh...");
 			res.send({
 				user: user.email,
 				token: token
 			});
-
 		}).fail(function (err) {
 			console.log('');
 			res.send('Errrrrrrrrrrrr : ', err);

@@ -59,17 +59,44 @@
 				alg: algorithm
 			},
 			jwt = base64Encode(JSON.stringify(header)) + '.' + base64Encode(JSON.stringify(payload));
-			return jwt + '.'+ sign(jwt,secret);
+		return jwt + '.' + sign(jwt, secret);
+	}
+
+	function decode(token, secret) {
+		var segments = token.split('.');
+		if (segments.length !== 3) {
+			throw new Error('token structure incorrect');
+		}
+
+		var raw_signature = segments[0] + '.' + segments[1];
+
+		if (!verify(raw_signature, "shh...", segments[2])) {
+			throw new Error('verification failed');
+		}
+		var header = JSON.parse(base64Decode(segments[0]));
+		var payload = JSON.parse(base64Decode(segments[1]));
+		return payload;
 	}
 
 	function base64Encode(str) {
 		return Buffer(str).toString('base64');
 	}
 
+	function base64Decode(str) {
+		return new Buffer(str, 'base64').toString();
+	}
+
 	function sign(str, key) {
 		return crypto.createHmac('sha256', key).update(str).digest('base64');
 	}
+
+	function verify(raw, secret, signature) {
+		return signature === sign(raw, secret);
+	}
+
 	exports.showDb = showDb;
 	exports.encryptor2 = encryptor2;
 	exports.encode = encode;
+	exports.decode = decode;
+	//exports.verify = verify;
 }());

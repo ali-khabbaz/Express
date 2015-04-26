@@ -26,6 +26,5 @@ define(['app'], function (app) {
 	app.config(function ($httpProvider) {
 		console.log('>>>>>>', $httpProvider.interceptors.length);
 		$httpProvider.interceptors.push('authInterceptor');
-		//$httpProvider.responseInterceptors.push('authInterceptor');
 	});
 });
