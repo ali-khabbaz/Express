@@ -1,8 +1,8 @@
 (function () {
 	var showDb = require('../utilities.js').showDb,
 		encryptor2 = require('../utilities.js').encryptor2,
-		sign = require('../utilities.js').sign,
-		encode = require('../utilities.js').encode,
+		//sign = require('../utilities.js').sign,
+		jwt = require('../requires.js').jwt,
 		q = require('../utilities.js').q;
 
 	function register(req, res, next) {
@@ -24,7 +24,7 @@
 				iss: req.hostname,
 				sub: user.id
 			};
-			var token = encode(payload, "shh...");
+			var token = jwt.encode(payload, "shh...");
 			res.send({
 				user: user.email,
 				token: token
