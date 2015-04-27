@@ -10,11 +10,9 @@
 			getJobs();
 
 			function getJobs() {
-				console.log('send data');
 				var url = "http://127.0.0.1/app/jobs";
 				$http.post(url)
 					.success(function (res) {
-						console.log('resuslt is', res);
 						vm.jobs_data = res;
 					}).error(function (err) {
 						console.log('error is', err);

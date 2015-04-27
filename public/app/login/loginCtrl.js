@@ -3,22 +3,32 @@
 	define(['app'], function (app) {
 		app.controller('loginCtrl', loginCtrl);
 
-		loginCtrl.$inject = ['$http'];
+		loginCtrl.$inject = ['$http', 'mainViewFactory'];
 
-		function loginCtrl($http) {
+		function loginCtrl($http, mainFac) {
 			var vm = this;
 			vm.login = login;
+			vm.authenticated = mainFac.isAuthenticated();
+			vm.logOut = logOut;
+
+			function logOut() {
+				mainFac.removeToken();
+				vm.authenticated = mainFac.isAuthenticated();
+			}
 
 			function login(email, password) {
-				console.log('email', email, 'password', password);
 				var url = "http://127.0.0.1/app/login";
-				var data = {"user":email,"password":password};
-				$http.post(url,data)
-				.success(function(res){
-					console.log('resuslt is',res);
-				}).error(function(err){
-					console.log('error is',err);
-				});
+				var data = {
+					"user": email,
+					"password": password
+				};
+				$http.post(url, data)
+					.success(function (res) {
+						mainFac.setToken(res.token);
+						vm.authenticated = mainFac.isAuthenticated();
+					}).error(function (err) {
+						console.log('error is', err);
+					});
 			}
 		}
 

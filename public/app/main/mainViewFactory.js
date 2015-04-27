@@ -28,10 +28,6 @@ define(['app'], function (app) {
 		}
 
 		function isAuthenticated() {
-			if (!!getToken()) {
-				console.log(getToken());
-			}
-
 			return !!getToken();
 		}
 

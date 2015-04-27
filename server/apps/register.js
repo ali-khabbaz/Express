@@ -1,8 +1,8 @@
 (function () {
 	var showDb = require('../utilities.js').showDb,
 		encryptor2 = require('../utilities.js').encryptor2,
-		//sign = require('../utilities.js').sign,
-		jwt = require('../requires.js').jwt,
+		createToken = require('../utilities.js').createToken,
+		//jwt = require('../requires.js').jwt,
 		q = require('../utilities.js').q;
 
 	function register(req, res, next) {
@@ -20,11 +20,12 @@
 			console.log('query is', query);
 			/*for example i add user info to db and retrieve user id*/
 			user.id = 56690;
-			var payload = {
+			/*var payload = {
 				iss: req.hostname,
 				sub: user.id
 			};
-			var token = jwt.encode(payload, "shh...");
+			var token = jwt.encode(payload, "shh...");*/
+			var token = createToken(user,req);
 			res.send({
 				user: user.email,
 				token: token

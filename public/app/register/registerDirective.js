@@ -21,7 +21,6 @@
 				//restrict: 'E',
 				require:'ngModel',
 				link: function (scope, element, attrs, ngModelCtrl) {
-					console.log('ngModelCtrl',ngModelCtrl);
 				}
 			};
 		}

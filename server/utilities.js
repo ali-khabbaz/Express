@@ -2,6 +2,7 @@
 	var q = require('./requires.js').q,
 		bcrypt = require('./requires.js').bcrypt,
 		crypto = require('./requires.js').crypto,
+		jwt = require('./requires.js').jwt,
 		c = require('./requires.js').c;
 
 	function showDb(myquery) {
@@ -94,9 +95,17 @@
 		return signature === sign(raw, secret);
 	}
 
+	function createToken(user, req) {
+		var payload = {
+			iss: req.hostname,
+			sub: user.id
+		};
+		return jwt.encode(payload, "shh...");
+	}
+
 	exports.showDb = showDb;
 	exports.encryptor2 = encryptor2;
 	exports.encode = encode;
 	exports.decode = decode;
-	//exports.verify = verify;
+	exports.createToken = createToken;
 }());
