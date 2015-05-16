@@ -7,8 +7,9 @@ var express = require('./server/requires.js').express,
 	bodyParser = require('./server/requires.js').bodyParser,
 	cookieParser = require('./server/requires.js').cookieParser,
 	decode = require('./server/utilities.js').decode,
-	//verify = require('./server/utilities.js').verify,
-	numCPUs = require('./server/requires.js').numCPUs;
+	numCPUs = require('./server/requires.js').numCPUs,
+	passport = require('./server/requires.js').passport,
+	local_strategy = require('./server/requires.js').local_strategy;
 
 
 var PORT = 80;
@@ -40,7 +41,29 @@ if (cluster.isMaster) {
 	app.use(
 		express.static(path.join(__dirname, '/public'))
 	);
+	app.use(passport.initialize());
+	passport.serializeUser(function (user, done) {
+		console.log('serialize', user);
+		done(null, user.id);
+	});
 
+	var strategy = new local_strategy({
+		usernameField: 'email'
+	}, function (email, password, done) {
+		console.log('----------------------call passport', email, password);
+		if (err) {
+			return done(err);
+		}
+
+		if (!user) {
+			return done(null, false, {
+				message: 'wrong email or password'
+			});
+		}
+
+		return done(null, user);
+	});
+	passport.use(strategy);
 
 
 	var registerFunction = require('./server/apps/register.js').register;

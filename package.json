@@ -1,12 +1,12 @@
 {
-  "name": "express_angular",
+  "name": "express_angular_node_mariadb",
   "version": "1.0.0",
   "description": "first test",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ali khabbaz",
+  "author": "Ali Khabbaz",
   "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
