@@ -41,9 +41,11 @@ if (cluster.isMaster) {
 	app.use(
 		express.static(path.join(__dirname, '/public'))
 	);
+
 	app.use(passport.initialize());
+
 	passport.serializeUser(function (user, done) {
-		console.log('serialize', user);
+		console.log('serializeeee', user);
 		done(null, user.id);
 	});
 
@@ -51,16 +53,21 @@ if (cluster.isMaster) {
 		usernameField: 'email'
 	}, function (email, password, done) {
 		console.log('----------------------call passport', email, password);
-		if (err) {
-			return done(err);
-		}
+		/*
+		in this part we find the user from DB and return user object with username and id
+		*/
 
+		var user = {
+			"email": email,
+			"id": 110
+		};
 		if (!user) {
+			console.log('not user');
 			return done(null, false, {
 				message: 'wrong email or password'
 			});
 		}
-
+		console.log('returning >>>>>>>>>>>>');
 		return done(null, user);
 	});
 	passport.use(strategy);

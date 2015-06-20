@@ -19,7 +19,7 @@
 			function login(email, password) {
 				var url = "http://127.0.0.1/app/login";
 				var data = {
-					"user": email,
+					"email": email,
 					"password": password
 				};
 				$http.post(url, data)
