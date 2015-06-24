@@ -10,10 +10,14 @@
 			vm.login = login;
 			vm.authenticated = mainFac.isAuthenticated();
 			vm.logOut = logOut;
+			vm.user = '';
 
 			function logOut() {
 				mainFac.removeToken();
 				vm.authenticated = mainFac.isAuthenticated();
+			}
+			if (mainFac.isAuthenticated()) {
+				vm.user = mainFac.getUser();
 			}
 
 			function login(email, password) {
@@ -22,9 +26,17 @@
 					"email": email,
 					"password": password
 				};
+
 				$http.post(url, data)
 					.success(function (res) {
+						console.log('>>>>>>>', res);
 						mainFac.setToken(res.token);
+						mainFac.setUser([
+							res.user,
+							res.id
+						]);
+						console.log('get user', mainFac.getUser());
+						vm.user = mainFac.getUser();
 						vm.authenticated = mainFac.isAuthenticated();
 					}).error(function (err) {
 						console.log('error is', err);

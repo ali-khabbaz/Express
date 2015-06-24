@@ -8,6 +8,9 @@ var express = require('./server/requires.js').express,
 	cookieParser = require('./server/requires.js').cookieParser,
 	decode = require('./server/utilities.js').decode,
 	numCPUs = require('./server/requires.js').numCPUs,
+	q = require('./server/utilities.js').q,
+	showDb = require('./server/utilities.js').showDb,
+	createToken = require('./server/utilities.js').createToken,
 	passport = require('./server/requires.js').passport,
 	local_strategy = require('./server/requires.js').local_strategy;
 
@@ -46,31 +49,77 @@ if (cluster.isMaster) {
 
 	passport.serializeUser(function (user, done) {
 		console.log('serializeeee', user);
-		done(null, user.id);
-	});
-
-	var strategy = new local_strategy({
-		usernameField: 'email'
-	}, function (email, password, done) {
-		console.log('----------------------call passport', email, password);
-		/*
-		in this part we find the user from DB and return user object with username and id
-		*/
-
-		var user = {
-			"email": email,
-			"id": 110
-		};
-		if (!user) {
-			console.log('not user');
-			return done(null, false, {
+		if (user) {
+			done(null, user.id);
+		} else {
+			done(null, false, {
 				message: 'wrong email or password'
 			});
 		}
-		console.log('returning >>>>>>>>>>>>');
-		return done(null, user);
+
 	});
-	passport.use(strategy);
+
+	var strategy_opts = {
+		usernameField: 'email'
+	};
+
+	var login_strategy = new local_strategy(strategy_opts, function (email, password, done) {
+		console.log('----------------------call login passport', email, password);
+		/*
+		in this part we find the user from DB and return user object with username and id
+		*/
+		showDb("SELECT email , ID FROM users WHERE email = '" + email + "' AND " +
+			"password = '" + password + "' ").then(function (result) {
+			console.log('result is', result);
+			if (result.length === 0) {
+				console.log('not user');
+				return done(null, false, {
+					message: 'wrong email or password'
+				});
+			} else {
+				var user = {
+					"email": result[0].email,
+					"id": +result[0].ID
+				};
+				return done(null, user);
+			}
+		}).fail(function (err) {
+			console.log('errrrrrrrrr is', err);
+			return done(null, false, {
+				message: err
+			});
+		});
+
+	});
+
+	var register_strategy = new local_strategy(strategy_opts, function (email, password, done) {
+		console.log('||||||||||||||||||||||call register passport', email, password);
+		var query = "INSERT INTO users (`email`, `password`) VALUES ( '" + email + "' , " +
+			" '" + password + "' )";
+		showDb(query).then(function (res_1) {
+			query = "SELECT email , ID FROM users WHERE email = '" + email + "' AND " +
+				"password = '" + password + "' ";
+
+			showDb(query).then(function (res_2) {
+				var user = {
+					"email": res_2[0].email,
+					"id": res_2[0].ID
+				};
+				done(null, user);
+
+			}).fail(function (err_1) {
+				console.log('1', err_1);
+				res.send('Errrrrrrrrrrrr : ', err);
+			});
+
+		}).fail(function (err_2) {
+			console.log('1', err_2);
+			res.send('Errrrrrrrrrrrr : ', err);
+		});
+	});
+
+	passport.use('local-register', register_strategy);
+	passport.use('local-login', login_strategy);
 
 
 	var registerFunction = require('./server/apps/register.js').register;
@@ -82,8 +131,29 @@ if (cluster.isMaster) {
 
 
 	app.get(/.pdf/, pdfServe);
-	app.post('/app/register', registerFunction);
-	app.post('/app/login', login);
+	//app.post('/app/register', registerFunction);
+	// app.post('/app/login', login);
+
+	app.post('/app/register', passport.authenticate('local-register'), function (req, res) {
+		var token = createToken(req.user, req);
+		res.send({
+			user: req.user.email,
+			id: req.user.id,
+			token: token
+		});
+	});
+
+
+
+	app.post('/app/login', passport.authenticate('local-login'), function (req, res) {
+		var token = createToken(req.user, req);
+		res.send({
+			user: req.user.email,
+			id: req.user.id,
+			token: token
+		});
+	});
+
 	app.post('/app/jobs', jobs);
 	app.get('/', global);
 

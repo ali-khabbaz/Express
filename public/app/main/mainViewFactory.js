@@ -6,6 +6,8 @@ define(['app'], function (app) {
 		var factory = {
 				getToken: getToken,
 				setToken: setToken,
+				getUser: getUser,
+				setUser: setUser,
 				isAuthenticated: isAuthenticated,
 				removeToken: removeToken,
 				request: request,
@@ -31,9 +33,20 @@ define(['app'], function (app) {
 			return !!getToken();
 		}
 
+		function setUser(user){
+			if(isAuthenticated()){
+				storage.setItem('userInfo', user);
+			}
+		}
+
+		function getUser(){
+			return storage.getItem('userInfo');
+		}
+
 		function removeToken() {
 			cached_token = null;
 			storage.removeItem('userToken');
+			storage.removeItem('userInfo');
 		}
 
 		function request(config) {
