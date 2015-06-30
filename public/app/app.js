@@ -33,5 +33,18 @@ define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolver
 			}
 		]
 	);
+	app.run(function ($window) {
+		console.log('>>>>>>>>>>', $window.location.search.substring(1));
+
+		var params = $window.location.search.substring(1);
+
+		if (params && $window.opener && $window.opener.location.origin === $window.location.origin) {
+			console.log('in if');
+			var pair = params.split('='),
+				code = decodeURIComponent(pair[1]);
+			$window.opener.postMessage(code, $window.location.origin);
+			$window.close();
+		}
+	});
 	return app;
 });
