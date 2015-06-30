@@ -3,13 +3,14 @@
 	define(['app'], function (app) {
 		app.controller('loginCtrl', loginCtrl);
 
-		loginCtrl.$inject = ['$http', 'mainViewFactory'];
+		loginCtrl.$inject = ['$http', 'mainViewFactory', '$window'];
 
-		function loginCtrl($http, mainFac) {
+		function loginCtrl($http, mainFac, $window) {
 			var vm = this;
 			vm.login = login;
 			vm.authenticated = mainFac.isAuthenticated();
 			vm.logOut = logOut;
+			vm.google = google;
 			vm.user = '';
 
 			function logOut() {
@@ -20,11 +21,11 @@
 				vm.user = mainFac.getUser();
 			}
 
-			function login(email, password) {
+			function login(e, p) {
 				var url = "http://127.0.0.1/app/login";
 				var data = {
-					"email": email,
-					"password": password
+					"email": e,
+					"password": p
 				};
 
 				$http.post(url, data)
@@ -41,6 +42,19 @@
 					}).error(function (err) {
 						console.log('error is', err);
 					});
+			}
+
+			function google() {
+				console.log('>>', window.location.origin);
+				var url_builder = ['response_type=code',
+					'client_id=868760868685-e98cfb4bg4cpbcgptd5ilvp81tnoa4jp.apps.googleusercontent.com',
+					'scope=profile',
+					'redirect_uri=http://localhost/'
+				];
+				var url = 'https://accounts.google.com/o/oauth2/auth?' + url_builder.join('&');
+				var options = 'width=500, height=500, left= ' + ($window.outerWidth - 500) / 2 +
+					', top=' + ($window.outerHeight - 500) / 2.5;
+				$window.open(url, '', options);
 			}
 		}
 
