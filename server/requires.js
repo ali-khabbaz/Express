@@ -3,6 +3,7 @@
 		env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
 		app = express(),
 		q = require('q'),
+		request = require('request'),
 		logger = require('morgan'),
 		cookieParser = require('cookie-parser'),
 		bodyParser = require('body-parser'),
@@ -33,6 +34,7 @@
 	exports.bcrypt = bcrypt;
 	exports.crypto = crypto;
 	exports.jwt = jwt;
+	exports.request = request;
 	exports.passport = passport;
 	exports.local_strategy = local_strategy;
 

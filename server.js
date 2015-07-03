@@ -8,7 +8,7 @@ var express = require('./server/requires.js').express,
 	cookieParser = require('./server/requires.js').cookieParser,
 	decode = require('./server/utilities.js').decode,
 	numCPUs = require('./server/requires.js').numCPUs,
-	q = require('./server/utilities.js').q,
+	request = require('./server/requires.js').request,
 	showDb = require('./server/utilities.js').showDb,
 	createToken = require('./server/utilities.js').createToken,
 	passport = require('./server/requires.js').passport,
@@ -142,15 +142,101 @@ if (cluster.isMaster) {
 			token: token
 		});
 	});
-
-
-
 	app.post('/app/login', passport.authenticate('local-login'), function (req, res) {
 		var token = createToken(req.user, req);
 		res.send({
 			user: req.user.email,
 			id: req.user.id,
 			token: token
+		});
+	});
+
+	app.post('/app/google-auth', function (req, res) {
+		var url = 'https://accounts.google.com/o/oauth2/token',
+			api_url = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect',
+			params = {
+				"client_id": req.body.client_id,
+				"code": req.body.code,
+				"redirect_uri": req.body.redirect_uri,
+				"grant_type": 'authorization_code',
+				"client_secret": 'luhLc7grx54U1pp_7BeadJep'
+			};
+
+		request.post(url, {
+			"json": true,
+			"form": params
+		}, function (err, response, token) {
+			var access_token = token.access_token,
+				headers = {
+					"Authorization": 'Bearer ' + access_token
+				};
+			request.get({
+				"url": api_url,
+				"headers": headers,
+				"json": true
+			}, function (err_2, response_2, profile) {
+
+				if (!profile.code) {
+					profile.sub = +profile.sub;
+					console.log('profile', profile);
+					var query = "SELECT ID FROM users WHERE email = '" + profile.email + "' AND " +
+						"google_id = '" + profile.sub + "' ";
+
+					showDb(query).then(function (res_2) {
+						if (!res_2.length) {
+							console.log('creating user');
+							query = "INSERT INTO users (google_id , email, gender, name, first_name , last_name " +
+								",picture ,google_profile) VALUES ('" + profile.sub + "' , '" + profile.email + "', " +
+								"'" + profile.gender + "', '" + profile.name + "', '" + profile.given_name + "' ," +
+								"'" + profile.family_name + "', '" + profile.picture + "' , '" + profile.profile + "' )";
+							console.log('queryyyyyyyy', query);
+							showDb(query).then(function (res_3) {
+								console.log('user created');
+								showDb("SELECT email , ID FROM users WHERE email = '" + profile.email + "' AND " +
+									"google_id = '" + profile.sub + "' ").then(function (result) {
+									console.log('result is', result[0].ID);
+									var token = createToken({
+										"id": +result[0].ID
+									}, req);
+									res.send({
+										user: profile.email,
+										id: +result[0].ID,
+										token: token
+									});
+
+								}).fail(function (err) {
+									console.log('errrrrrrrrr is', err);
+								});
+
+
+							}).fail(function (err_3) {
+								console.log('err_3', err_3);
+							});
+						} else {
+							console.log('user existed', res_2);
+							showDb("SELECT email , ID FROM users WHERE email = '" + profile.email + "' AND " +
+								"google_id = '" + profile.sub + "' ").then(function (result) {
+								console.log('result is', result[0].ID);
+								var token = createToken({
+									"id": +result[0].ID
+								}, req);
+								res.send({
+									user: profile.email,
+									id: +result[0].ID,
+									token: token
+								});
+
+							}).fail(function (err) {
+								console.log('errrrrrrrrr is', err);
+							});
+						}
+
+					}).fail(function (err_1) {
+						console.log('1', err_1);
+						res.send('Errrrrrrrrrrrr : ', err);
+					});
+				}
+			});
 		});
 	});
 

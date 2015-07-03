@@ -16,7 +16,7 @@
 					console.log('another err', err);
 					return res.status(401).send({
 						message: 'username or password is wrong'
-					}); 
+					});
 				}
 				var token = createToken(user, req);
 				res.send({
