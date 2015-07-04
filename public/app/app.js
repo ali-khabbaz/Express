@@ -43,7 +43,7 @@ define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolver
 			var pair = params.split('='),
 				code = decodeURIComponent(pair[1]);
 			$window.opener.postMessage(code, $window.location.origin);
-			$window.close();
+			//$window.close();
 		}
 	});
 	return app;
