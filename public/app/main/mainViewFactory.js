@@ -11,7 +11,8 @@ define(['app'], function (app) {
 				isAuthenticated: isAuthenticated,
 				removeToken: removeToken,
 				request: request,
-				response: response
+				response: response,
+				api_url : "http://localhost/"
 			},
 			storage = $window.localStorage,
 			cached_token;

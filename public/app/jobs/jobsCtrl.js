@@ -4,13 +4,13 @@
 		app.controller('jobsCtrl', jobsCtrl);
 		jobsCtrl.$inject = ['$http', 'mainViewFactory'];
 
-		function jobsCtrl($http, mainViewFactory) {
+		function jobsCtrl($http, mainFac) {
 			var vm = this;
 			vm.jobs_data = '';
 			getJobs();
 
 			function getJobs() {
-				var url = "http://127.0.0.1/app/jobs";
+				var url = mainFac.api_url +"app/jobs";
 				$http.post(url)
 					.success(function (res) {
 						vm.jobs_data = res;

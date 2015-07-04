@@ -60,20 +60,27 @@
 					if (event.origin === $window.location.origin) {
 						console.log('*********', event.data);
 						pop_up.close();
+						var url = mainFac.api_url + "app/google-auth";
+						var code = {
+							"code": event.data,
+							"client_id": '868760868685-e98cfb4bg4cpbcgptd5ilvp81tnoa4jp.apps.googleusercontent.com',
+							"redirect_uri": 'http://localhost/'
+						};
 
-						$http.post(url, data).success(function (res) {
-							console.log('>>>>>>>', res);
-							mainFac.setToken(res.token);
-							mainFac.setUser([
-								res.user,
-								res.id
-							]);
-							console.log('get user', mainFac.getUser());
-							vm.user = mainFac.getUser();
-							vm.authenticated = mainFac.isAuthenticated();
-						}).error(function (err) {
-							console.log('error is', err);
-						});
+						$http.post(url, code)
+							.success(function (res) {
+								console.log('getting res', res);
+								mainFac.setToken(res.token);
+								mainFac.setUser([
+									res.user,
+									res.id
+								]);
+								console.log('get user', mainFac.getUser());
+								vm.user = mainFac.getUser();
+								vm.authenticated = mainFac.isAuthenticated();
+							}).error(function (err) {
+								console.log('error is', err);
+							});
 					}
 				});
 			}
