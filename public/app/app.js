@@ -1,5 +1,5 @@
 define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolverFor) {
-	var app = angular.module('app', ['ngRoute']);
+	var app = angular.module('app', ['ngRoute', 'satellizer']);
 	app.config(
 		[
 			'$routeProvider',
@@ -8,7 +8,8 @@ define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolver
 			'$compileProvider',
 			'$filterProvider',
 			'$provide',
-			function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
+			'$authProvider',
+			function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $authProvider) {
 				app.controller = $controllerProvider.register;
 				app.directive = $compileProvider.directive;
 				app.filter = $filterProvider.register;
@@ -28,22 +29,34 @@ define(['routes', 'dependencyResolverFor'], function (routes, dependencyResolver
 						redirectTo: routes.defaultRoutePath
 					});
 				}
+				$authProvider.google({
+					client_id: '868760868685-e98cfb4bg4cpbcgptd5ilvp81tnoa4jp.apps.googleusercontent.com',
+					url: '/auth/google',
+					authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
+					redirectUri: 'http://localhost/',
+					scope: ['profile', 'email'],
+					scopePrefix: 'openid',
+					scopeDelimiter: ' ',
+					requiredUrlParams: ['scope'],
+					optionalUrlParams: ['display'],
+					display: 'popup',
+					type: '2.0',
+					popupOptions: {
+						width: 1580,
+						height: 400
+					}
+				});
 				//$httpProvider.interceptors.push('mainViewFactory');
 				//$httpProvider.responseInterceptors.push('httpInterceptor');
 			}
 		]
 	);
 	app.run(function ($window) {
-		console.log('>>>>>>>>>>', $window.location.search.substring(1));
-
 		var params = $window.location.search.substring(1);
-
 		if (params && $window.opener && $window.opener.location.origin === $window.location.origin) {
-			console.log('in if');
 			var pair = params.split('='),
 				code = decodeURIComponent(pair[1]);
 			$window.opener.postMessage(code, $window.location.origin);
-			//$window.close();
 		}
 	});
 	return app;

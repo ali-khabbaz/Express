@@ -12,7 +12,8 @@ define(['app'], function (app) {
 				removeToken: removeToken,
 				request: request,
 				response: response,
-				api_url : "http://localhost/"
+				remoteLogin: remoteLogin,
+				api_url: "http://localhost/"
 			},
 			storage = $window.localStorage,
 			cached_token;
@@ -34,13 +35,13 @@ define(['app'], function (app) {
 			return !!getToken();
 		}
 
-		function setUser(user){
-			if(isAuthenticated()){
+		function setUser(user) {
+			if (isAuthenticated()) {
 				storage.setItem('userInfo', user);
 			}
 		}
 
-		function getUser(){
+		function getUser() {
 			return storage.getItem('userInfo');
 		}
 
@@ -52,14 +53,18 @@ define(['app'], function (app) {
 
 		function request(config) {
 			var token = getToken();
-			if(token){
-				config.headers.authorization = 'ali is just'+ token ;
+			if (token) {
+				config.headers.authorization = 'ali is just' + token;
 			}
-			return config ;
+			return config;
 		}
 
 		function response(res) {
-			return res ;
+			return res;
+		}
+
+		function remoteLogin(provider) {
+
 		}
 	}
 

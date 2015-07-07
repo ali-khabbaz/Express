@@ -9,16 +9,20 @@ require.config({
 		'angular-resource': '../vendor/angular-resource/angular-resource.min',
 		'MainViewCtrl': 'main/MainViewCtrl',
 		'mainViewFactory': 'main/mainViewFactory',
-		'authInterceptor': 'main/authInterceptor'
+		'authInterceptor': 'main/authInterceptor',
+		'satellizer': '../vendor/satellizer'
 	},
 	shim: {
 		'app': {
-			deps: ['angular-route', 'angular-resource']
+			deps: ['angular-route', 'angular-resource', 'satellizer']
 		},
 		'angular-route': {
 			deps: ['angular']
 		},
 		'angular-resource': {
+			deps: ['angular']
+		},
+		'satellizer': {
 			deps: ['angular']
 		}
 
@@ -29,7 +33,7 @@ requirejs.onError = function (err) {
 	throw err;
 };
 require(['app'], function () {
-	require(['MainViewCtrl', 'mainViewFactory' , 'authInterceptor' ], function () {
+	require(['MainViewCtrl', 'mainViewFactory', 'authInterceptor'], function () {
 		angular.bootstrap(document, ['app']);
 	});
 });

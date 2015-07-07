@@ -3,9 +3,9 @@
 	define(['app'], function (app) {
 		app.controller('loginCtrl', loginCtrl);
 
-		loginCtrl.$inject = ['$http', 'mainViewFactory', '$window'];
+		loginCtrl.$inject = ['$http', 'mainViewFactory', '$window', '$auth'];
 
-		function loginCtrl($http, mainFac, $window) {
+		function loginCtrl($http, mainFac, $window, $auth) {
 			var vm = this;
 			vm.login = login;
 			vm.authenticated = mainFac.isAuthenticated();
@@ -58,7 +58,6 @@
 				console.log('focused');
 				$window.addEventListener('message', function (event) {
 					if (event.origin === $window.location.origin) {
-						console.log('*********', event.data);
 						pop_up.close();
 						var url = mainFac.api_url + "app/google-auth";
 						var code = {
@@ -83,6 +82,15 @@
 							});
 					}
 				});
+			}
+			/*function google(provider) {
+				$auth.authenticate(provider).then(function (res) {
+					console.log('ok', res);
+				}, handleError);
+			}*/
+
+			function handleError(err) {
+				console.log('err', err);
 			}
 		}
 

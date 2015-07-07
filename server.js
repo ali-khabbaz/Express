@@ -175,7 +175,6 @@ if (cluster.isMaster) {
 				"headers": headers,
 				"json": true
 			}, function (err_2, response_2, profile) {
-
 				if (!profile.code) {
 					profile.sub = +profile.sub;
 					console.log('profile', profile);
