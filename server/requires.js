@@ -2,6 +2,7 @@
 	var express = require('express'),
 		env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
 		app = express(),
+		session = require('express-session'),
 		q = require('q'),
 		request = require('request'),
 		logger = require('morgan'),
@@ -15,6 +16,7 @@
 		crypto = require('crypto'),
 		Client = require('mariasql'),
 		jwt = require('jwt-simple'),
+		sess,
 		passport = require('passport'),
 		local_strategy = require('passport-local').Strategy,
 		c = new Client();
@@ -22,11 +24,13 @@
 
 	exports.app = app;
 	exports.express = express;
+	exports.session = session;
 	exports.q = q;
 	exports.logger = logger;
 	exports.cookieParser = cookieParser;
 	exports.bodyParser = bodyParser;
 	exports.path = path;
+	exports.sess = sess;
 	exports.cluster = cluster;
 	exports.numCPUs = numCPUs;
 	exports.util = util;

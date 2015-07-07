@@ -44,7 +44,6 @@ if (cluster.isMaster) {
 	app.use(
 		express.static(path.join(__dirname, '/public'))
 	);
-
 	app.use(passport.initialize());
 
 	passport.serializeUser(function (user, done) {
@@ -66,7 +65,7 @@ if (cluster.isMaster) {
 	var login_strategy = new local_strategy(strategy_opts, function (email, password, done) {
 		console.log('----------------------call login passport', email, password);
 		/*
-		in this part we find the user from DB and return user object with username and id
+		in this part we find the user from DB and return the user object with username and id
 		*/
 		showDb("SELECT email , ID FROM users WHERE email = '" + email + "' AND " +
 			"password = '" + password + "' ").then(function (result) {
@@ -127,6 +126,19 @@ if (cluster.isMaster) {
 	var global = require('./server/apps/global.js').global;
 	var pdfServe = require('./server/apps/pdfServe.js').pdfServe;
 	var jobs = require('./server/apps/jobs.js').jobs;
+
+	/*
+	destroy session
+	req.session.destroy(function (err) {
+		if (err) {
+			console.log(err);
+		} else {
+			res.redirect('/');
+		}
+	});
+
+
+	 */
 
 
 
